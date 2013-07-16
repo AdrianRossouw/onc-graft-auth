@@ -1,0 +1,25 @@
+{
+  "name": "graft-passport",
+  "version": "0.0.1",
+  "description": "Pluggable authentication support for Graft.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ONCHoldings/graft-passport.git"
+  },
+  "author": "Adrian Rossouw",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "dae359faf805a773f14590a5c65e4a2b7a0237a0",
+  "dependencies": {
+    "passport": "~0.1.17",
+    "passport-local": "~0.1.6"
+  },
+  "devDependencies": {
+    "passport-dummy": "0.0.1",
+    "mocha": "~1.12.0"
+  }
+}
