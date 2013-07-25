@@ -1,5 +1,5 @@
 {
-  "name": "graft-passport",
+  "name": "graft-auth",
   "version": "0.0.1",
   "description": "Pluggable authentication support for Graft.js",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ONCHoldings/graft-passport.git"
+    "url": "git://github.com/ONCHoldings/graft-auth.git"
   },
   "author": "Adrian Rossouw",
   "license": "MIT",
