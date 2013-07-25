@@ -1,49 +1,98 @@
 /**
  * Primary passport service implementation 
 */
-var express  = require('express');
-var http     = require('http');
-var path     = require('path');
-var passport = require('passport');
+var express     = require('express');
+var http        = require('http');
+var passport    = require('passport');
+var MemoryStore = require('connect/middleware/session/memory').MemoryStore;
 
-var _express = express();
-this.express = _express;
-this.server  = http.createServer(this.express);
+this.vent       = new Backbone.Wreqr.EventAggregator();
+this.commands   = new Backbone.Wreqr.Commands();
+this.reqres     = new Backbone.Wreqr.RequestResponse();
+var _express    = express();
+this.express    = _express;
+this.server     = http.createServer(this.express);
 
-_.extend(this, _express);
 
+_.extend(this, _express, {
+    // Command execution, facilitated by Backbone.Wreqr.Commands
+    execute: function(){
+        var args = Array.prototype.slice.apply(arguments);
+        this.commands.execute.apply(this.commands, args);
+    },
+    // Request/response, facilitated by Backbone.Wreqr.RequestResponse
+    request: function(){
+        var args = Array.prototype.slice.apply(arguments);
+        return this.reqres.request.apply(this.reqres, args);
+    }
+});
 
-function serializeUser(user, done) {
-    done(null, user);
-}
+// Set to specify which model is to be used for authentication.
+this.AuthModel = this.AuthModel || Graft.BaseModel;
 
-function deserializeUser(obj, done) {
-    done(null, new Graft.$models.Account(obj));
-}
-
-this.addInitializer(function(options) {
-    // Passport session setup.
-    passport.serializeUser(this.serializeUser || serializeUser);
-    passport.deserializeUser(this.deserializeUser || deserializeUser);
+// Set a SessionStore to use for storing sessions.
+this.SessionStore = this.SessionStore || new MemoryStore({ 
+    reapInterval: 60000 * 10
 });
 
 
-// store the strategy instance in a separate variable, so we can access it easily.
-var strategy = new this.strategy(this.options, this.verify);
-strategy.name = this.key;
+this.commands.setHandler('deserialize', function(obj, done) {
+    done(null, new this.AuthModel(obj));
+});
 
-// mount the passport strategy.
-passport.use(this.key, strategy);
+this.commands.setHandler('serialize', function(user, done) {
+    done(null, user);
+});
 
-this.use(passport.initialize());
-this.use(passport.session());
-this.use(this.router);
+this.commands.setHandler('verify', function() {
+    done(null, false, { message: 'No Authentication Strategy' });
+});
 
-this.get('/auth/' + this.key, passport.authenticate(this.key, 
-    { successRedirect: '/', failureRedirect: '/error' }));
+this.addInitializer(function(options) {
+    // Passport session setup.
+    passport.serializeUser(_.partial(this.execute, 'serialize'));
+    passport.deserializeUser(_.partial(this.execute, 'deserialize'));
+});
 
+this.reqres.setHandler('failureRedirect', _.f.functionize('/error'));
+this.reqres.setHandler('successRedirect', _.f.functionize('/'));
+this.reqres.aliasHandler('logoutRedirect', 'successRedirect');
+
+this.commands.setHandler('mount', function(key, strategy, method) {
+    var method = method || 'get';
+
+    var opts = {
+        successRedirect: this.request('successRedirect'),
+        failureRedirect: this.request('failureRedirect')
+    };
+
+    this[method]('/auth/' + key, passport.authenticate(key, opts));
+}, this);
+
+this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
+    var opts = opts || {};
+    var verifyFn = _.partial(this.command, 'verify:'+key);
+
+    var strategy = new Strategy(verifyFn, opts);
+    strategy.name = key;
+
+    this.passport.use(key, strategy);
+}, this);
+
+this.addInitializer(function middleware(opts) {
+    this.use(express.cookieParser());
+    this.use(express.session({secret: 'secret', key: 'express.sid'}));
+    this.use(passport.initialize());
+    this.use(passport.session());
+    this.use(this.router);
+});
+
+this.addInitializer(function(options) {
+    this.trigger('mountRoutes');
+
+    var logoutRedirect = this.request('logoutRedirect');
     this.get('/logout', function(req, res){
         req.logout();
-        res.redirect('/');
+        res.redirect(logoutRedirect);
     });
-
+});

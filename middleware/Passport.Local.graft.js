@@ -1,4 +1,4 @@
-var passport = require('passport'),
+/*var passport = require('passport'),
     strategy = require('passport-local').Strategy;
 
 server = servers.Passport.extend({
@@ -20,4 +20,4 @@ server.augment({
         }));
     }
 });
-
+*/

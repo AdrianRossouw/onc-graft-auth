@@ -1,14 +1,7 @@
-var passport = require('passport'),
-strategy = require('passport-dummy').Strategy;
+var Strategy = require('passport-dummy').Strategy;
 
+var Passport = Graft.module('Middleware.Passport');
 
-    key: 'dummy',
-    strategy: strategy,
-    verify: function(done, user) {
-        if(!user)
-            user = {
-                id: 'dummy'
-            }
-        return done(null, user);
-    }
-
+this.addInitializer(function(opts) {
+    this.strategy = Passport.request('createStrategy', 'dummy', Strategy, {});
+});
