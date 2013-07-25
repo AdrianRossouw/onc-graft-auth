@@ -1,1 +1,1 @@
-require('./middleware/Passport.graft.js');
+require('./middleware/Auth.graft.js');
