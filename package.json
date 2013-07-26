@@ -36,7 +36,7 @@
     "debug": "~0.7.2",
     "async": "~0.2.9",
     "passport": "~0.1.17",
-    "passport-local": "~0.1.6"
+    "passport-local": "~0.1.6",
+    "passport-dummy": "0.0.1"
   }
-
 }
