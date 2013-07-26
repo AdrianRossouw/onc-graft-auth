@@ -4,7 +4,7 @@
 var express     = require('express');
 var http        = require('http');
 var passport    = require('passport');
-var MemoryStore = require('connect/middleware/session/memory').MemoryStore;
+var MemoryStore = require('connect/lib/middleware/session/memory');
 
 this.vent       = new Backbone.Wreqr.EventAggregator();
 this.commands   = new Backbone.Wreqr.Commands();
