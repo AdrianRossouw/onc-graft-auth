@@ -1,1 +1,3 @@
-require('./middleware/Auth.graft.js');
+Graft.system('Auth', 'auth');
+
+require('./auth/Auth.graft.js');
