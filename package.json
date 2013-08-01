@@ -30,6 +30,10 @@
     "should": "~1.2.2",
     "request": "~2.21.0",
     "underscore": "1.5.x",
+    "jquery-browserify": "~1.8.1",
+    "jquery": "~1.8.3",
+    "backbone": "1.0.x",
+    "sinon": "~1.7.3",
     "async": "~0.2.9"
   },
   "dependencies": {
@@ -39,7 +43,6 @@
     "passport-local": "~0.1.6",
     "passport-dummy": "0.0.1",
     "connect": "~2.8.4",
-    "express": "~3.3.4",
-    "sinon": "~1.7.3"
+    "express": "~3.3.4"
   }
 }
