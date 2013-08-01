@@ -2,7 +2,7 @@
   "name": "graft-auth",
   "version": "0.0.1",
   "description": "Pluggable authentication support for Graft.js",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "mocha -R spec"
   },
@@ -39,6 +39,7 @@
     "passport-local": "~0.1.6",
     "passport-dummy": "0.0.1",
     "connect": "~2.8.4",
-    "express": "~3.3.4"
+    "express": "~3.3.4",
+    "sinon": "~1.7.3"
   }
 }
