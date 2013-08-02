@@ -77,7 +77,7 @@ this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
     passport.use(key, strategy);
 }, this);
 
-Graft.on('before:mount:middleware', function middleware(opts) {
+Graft.on('before:mount:server', function server(opts) {
     this.use(express.cookieParser());
     this.use(express.session({
         secret: 'secret',
@@ -106,7 +106,7 @@ this.addInitializer(function(options) {
     });
 });
 
-Graft.Middleware.on('listen', function(Server) {
+Graft.Server.on('listen', function(Server) {
     debug('Mounting auth server');
     Server.use(this);
 }, this);
