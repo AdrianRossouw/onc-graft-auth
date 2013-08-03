@@ -1,0 +1,5 @@
+{
+    "name": "auth",
+    "description": "Auth subsystem for graft.js",
+    "main": "auth.js"
+}

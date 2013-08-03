@@ -15,7 +15,7 @@ var TestModel = Backbone.Model.extend({});
 describe('Before Start', function() {
     before(function() {
         Graft.BaseModel = TestModel;
-        require('../server.js');
+        require('../server');
     });
 
     it('should have loaded the Auth system', function() {
@@ -43,7 +43,7 @@ describe('Before Start', function() {
 describe('Mounting Dummy Strategy', function() {
 
     before(function() {
-        require('../auth/Dummy.graft.js');
+        require('../auth/dummy');
     });
     it('should have registered the subsystem', function() {
         Graft.Auth.should.have.property('Dummy');
