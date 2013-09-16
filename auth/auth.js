@@ -77,7 +77,7 @@ this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
     passport.use(key, strategy);
 }, this);
 
-Graft.on('before:mount:server', function server(opts) {
+Graft.Server.on('before:mount:server', function server(opts) {
     this.use(express.cookieParser());
     this.use(express.session({
         secret: 'secret',
