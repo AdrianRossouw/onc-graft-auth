@@ -106,7 +106,7 @@ this.addInitializer(function(options) {
     });
 });
 
-Graft.Server.on('listen', function(Server) {
+Graft.Server.on('before:listen', function(Server) {
     debug('Mounting auth server');
     Server.use(this);
 }, this);
