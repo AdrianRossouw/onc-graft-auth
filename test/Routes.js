@@ -104,7 +104,7 @@ describe('Once Started', function() {
             });
 
             it('response should have content-type json', function() {
-                this.resp.should.have.header('content-type', 'application/json');
+                this.resp.should.have.header('content-type', 'application/json; charset=utf-8');
             });
             it('should have a body', function() {
                 should.exist(this.body);
@@ -118,17 +118,16 @@ describe('Once Started', function() {
             });
         });
         describe('/logout route', function() {
-            before(utils.requestUrl(testPort, '/logout'));
+            before(utils.requestUrl(testPort, '/auth', 'DELETE'));
 
-
-
-            it('should return status 200', function() {
-                this.resp.should.have.status(200);
+            it('should return status 302', function() {
+              console.log()
+                this.resp.should.have.status(302);
             });
 
-            it('should have redirected us', function() {
-                this.resp.req.path.should.eql('/');
-            });
+          it('should have fired the after:logout event', function() {
+            sinon.assert.calledWith(Graft.Auth.trigger, 'after:logout');
+          });
         });
 
     });
@@ -175,7 +174,7 @@ describe('Once Started', function() {
             before(resetSpies);
 
             describe('/logout route', function() {
-                before(utils.requestUrl(testPort, '/logout'));
+                before(utils.requestUrl(testPort, '/auth', 'DELETE'));
 
                 it('should have set the session store', function() {
                     sinon.assert.called(Graft.Auth.SessionStore.set);
@@ -183,8 +182,8 @@ describe('Once Started', function() {
                 it('should have deserialized the user', function() {
                     sinon.assert.calledWith(Graft.Auth.execute, 'deserialize');
                 });
-                it('should return status 200', function() {
-                    this.resp.should.have.status(200);
+                it('should return status 302', function() {
+                    this.resp.should.have.status(302);
                 });
             });
 
@@ -195,7 +194,7 @@ describe('Once Started', function() {
                     this.resp.should.have.status(403);
                 });
                 it('response should have content-type json', function() {
-                    this.resp.should.have.header('content-type', 'application/json');
+                    this.resp.should.have.header('content-type', 'application/json; charset=utf-8');
                 });
                 it('should have a body', function() {
                     should.exist(this.body);
@@ -207,7 +206,21 @@ describe('Once Started', function() {
 
         });
     });
+});
 
-    after(restoreSpies);
-    describe('stop server', utils.stopServer);
+describe('Mounting Passport-Local Strategy', function() {
+
+  before(function() {
+    require('../auth/local');
+  });
+  it('should have registered the subsystem', function() {
+    Graft.Auth.should.have.property('Local');
+  });
+});
+
+describe('Once Started', function() {
+ // before(setupSpies);
+
+  after(restoreSpies);
+  describe('stop server', utils.stopServer);
 });

@@ -90,6 +90,7 @@ Graft.on('before:mount:server', function server(opts) {
 }, this);
 
 this.addInitializer(function(options) {
+    var self = this;
     debug('mounting routes');
     this.trigger('mount:routes');
 
@@ -100,9 +101,10 @@ this.addInitializer(function(options) {
     });
 
     var logoutRedirect = this.request('logoutRedirect');
-    this.get('/logout', function(req, res){
-        req.logout();
-        res.redirect(logoutRedirect);
+    this.del('/auth', function(req, res){
+      req.logout();
+      self.trigger('after:logout', logoutRedirect);
+      res.send(302, { Location: logoutRedirect });
     });
 });
 
