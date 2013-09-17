@@ -127,9 +127,9 @@ describe('Once Started', function() {
                 this.resp.should.have.status(302);
             });
 
-          it('should have fired the after:logout event', function() {
-            sinon.assert.calledWith(Graft.Auth.trigger, 'after:logout');
-          });
+            it('should have fired the after:logout event', function() {
+                sinon.assert.calledWith(Graft.Auth.trigger, 'after:logout');
+            });
         });
 
     });
@@ -213,17 +213,17 @@ describe('Once Started', function() {
 
 describe('Mounting Passport-Local Strategy', function() {
 
-  before(function() {
-    require('../auth/local');
-  });
-  it('should have registered the subsystem', function() {
-    Graft.Auth.should.have.property('Local');
-  });
+    before(function() {
+        require('../auth/local');
+    });
+    it('should have registered the subsystem', function() {
+        Graft.Auth.should.have.property('Local');
+    });
 });
 
 describe('Once Started', function() {
- // before(setupSpies);
+    // before(setupSpies);
 
-  describe('stop server', utils.stopServer);
-  after(restoreSpies);
+    describe('stop server', utils.stopServer);
+    after(restoreSpies);
 });
