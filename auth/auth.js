@@ -64,7 +64,7 @@ this.commands.setHandler('mount', function(key, strategy, method) {
         failureRedirect: this.request('failureRedirect')
     };
 
-    this[method]('/auth/' + key, passport.authenticate(key, opts));
+    this[method]('/' + key, passport.authenticate(key, opts));
 }, this);
 
 this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
@@ -77,7 +77,7 @@ this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
     passport.use(key, strategy);
 }, this);
 
-Graft.Server.on('before:mount:server', function server(opts) {
+Graft.Server.on('after:mount:server', function server(opts) {
     this.use(express.cookieParser());
     this.use(express.session({
         secret: 'secret',
@@ -86,14 +86,17 @@ Graft.Server.on('before:mount:server', function server(opts) {
     }));
     this.use(passport.initialize());
     this.use(passport.session());
+}, this);
+
+Graft.Server.on('before:mount:router', function server(opts) {
     this.use(this.router);
+    debug('mount router');
 }, this);
 
 this.addInitializer(function(options) {
-    debug('mounting routes');
     this.trigger('mount:routes');
 
-    this.get('/auth', function(req, res, next) {
+    this.get('/', function(req, res, next) {
         if (!req.user) { return res.send(403, {error: 'Not Authorized'}); }
 
         res.send(req.user);
@@ -104,9 +107,12 @@ this.addInitializer(function(options) {
         req.logout();
         res.redirect(logoutRedirect);
     });
+
+
+    debug('mounted routes', this.routes);
 });
 
 Graft.Server.on('before:listen', function(Server) {
-    debug('Mounting auth server');
-    Server.use(this);
+    debug('Mounting auth server', this.routes);
+    Server.use('/auth', this);
 }, this);
