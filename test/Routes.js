@@ -105,7 +105,7 @@ describe('Once Started', function() {
             });
 
             it('response should have content-type json', function() {
-                this.resp.should.have.header('content-type', 'application/json; charset=utf-8');
+                this.resp.should.have.header('content-type', 'application/json');
             });
             it('should have a body', function() {
                 should.exist(this.body);
@@ -119,12 +119,11 @@ describe('Once Started', function() {
             });
         });
 
-        describe('/auth/logout route', function() {
-            before(utils.requestUrl(testPort, '/auth/logout'));
+        describe('DELETE /auth route', function() {
+            before(utils.requestUrl(testPort, '/auth', 'DELETE'));
 
 
             it('should return status 302', function() {
-              console.log()
                 this.resp.should.have.status(302);
             });
 
@@ -177,8 +176,8 @@ describe('Once Started', function() {
             before(resetSpies);
 
 
-            describe('/auth/logout route', function() {
-                before(utils.requestUrl(testPort, '/auth/logout'));
+            describe('DELETE /auth route', function() {
+                before(utils.requestUrl(testPort, '/auth', 'DELETE'));
 
                 it('should have set the session store', function() {
                     sinon.assert.called(Graft.Auth.SessionStore.set);
@@ -198,7 +197,7 @@ describe('Once Started', function() {
                     this.resp.should.have.status(403);
                 });
                 it('response should have content-type json', function() {
-                    this.resp.should.have.header('content-type', 'application/json; charset=utf-8');
+                    this.resp.should.have.header('content-type', 'application/json');
                 });
                 it('should have a body', function() {
                     should.exist(this.body);
@@ -225,6 +224,6 @@ describe('Mounting Passport-Local Strategy', function() {
 describe('Once Started', function() {
  // before(setupSpies);
 
-  after(restoreSpies);
   describe('stop server', utils.stopServer);
+  after(restoreSpies);
 });
