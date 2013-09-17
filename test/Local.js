@@ -87,7 +87,7 @@ describe('Once Started', function() {
 
     });
 
-    describe('Authenticated', function() {
+    describe.skip('Authenticated', function() {
         describe('/auth/local route', function() {
             before(utils.requestUrl(testPort, '/auth/local', 'POST', {
                 username: 'user',
