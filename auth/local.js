@@ -4,9 +4,12 @@ var passport = require('passport'),
 this.addInitializer(function(opts) {
   this.strategy = Graft.Auth.request('createStrategy', 'local', strategy, {});
 
-  Graft.Auth.execute('mount', 'local', strategy, 'post');
+  Graft.Auth.execute('mount', 'local', strategy);
 });
 
 Graft.Auth.commands.setHandler('verify:local', function(username, password, done) {
-  done(null, {id: 'local'})
+//  if(username != 'user')
+//    done('Error', {id: 'local'});
+//  else
+    done(null, {id: 'local'})
 }, this);

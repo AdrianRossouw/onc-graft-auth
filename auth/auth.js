@@ -106,7 +106,7 @@ this.addInitializer(function(options) {
     });
 
     var logoutRedirect = this.request('logoutRedirect');
-    this.del('/auth', function(req, res){
+    this.del('/', function(req, res){
       req.logout();
       self.trigger('after:logout', logoutRedirect);
       res.send(302, { Location: logoutRedirect });
