@@ -82,6 +82,7 @@ describe('Once Started', function() {
 
     before(function(done) {
         Graft.get('/', function(req, res) { res.send(req.session); });
+
         Graft.start({ port: testPort }).then(done);
     });
 
@@ -117,8 +118,10 @@ describe('Once Started', function() {
                 this.resp.headers['set-cookie'][0].should.include('express.sid');
             });
         });
-        describe('/logout route', function() {
-            before(utils.requestUrl(testPort, '/auth', 'DELETE'));
+
+        describe('/auth/logout route', function() {
+            before(utils.requestUrl(testPort, '/auth/logout'));
+
 
             it('should return status 302', function() {
               console.log()
@@ -173,8 +176,9 @@ describe('Once Started', function() {
         describe('logged out', function() {
             before(resetSpies);
 
-            describe('/logout route', function() {
-                before(utils.requestUrl(testPort, '/auth', 'DELETE'));
+
+            describe('/auth/logout route', function() {
+                before(utils.requestUrl(testPort, '/auth/logout'));
 
                 it('should have set the session store', function() {
                     sinon.assert.called(Graft.Auth.SessionStore.set);
