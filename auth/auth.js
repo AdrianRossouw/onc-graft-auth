@@ -85,7 +85,7 @@ this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
     passport.use(key, strategy);
 }, this);
 
-Graft.Server.on('before:mount:router', function server(opts) {
+Graft.Server.on('after:mount:server', function server(opts) {
     this.use(express.cookieParser());
     this.use(express.session({
         secret: 'secret',
@@ -112,6 +112,6 @@ Graft.Server.on('before:mount:router', function server(opts) {
 }, this);
 
 Graft.Server.on('listen', function(Server) {
-    debug('Mounting auth server', this.routes);
     Graft.Server.use('/auth', this);
+    debug('Mounting auth server', this.routes);
 }, this);
