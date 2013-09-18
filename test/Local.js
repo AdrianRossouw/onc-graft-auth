@@ -97,13 +97,13 @@ describe('Once Started', function() {
             });
 
             it('should have fired the after:logout event', function() {
-                //sinon.assert.calledWith(Graft.Auth.trigger, 'after:logout');
+                sinon.assert.calledWith(Graft.Auth.trigger, 'after:logout');
             });
         });
 
     });
 
-    describe('Authenticated', function() {
+    describe.skip('Authenticated', function() {
         describe('/auth/local route', function() {
             before(utils.requestUrl(testPort, '/auth/local', 'post', {
                 username: 'user',
