@@ -82,16 +82,32 @@ describe('Once Started', function() {
             it('response should have the message Not Authorized', function() {
                 this.body.error.should.eql('Not Authorized');
             });
+            it('should have a cookie', function() {
+                this.resp.should.have.header('Set-Cookie');
+                this.resp.headers['set-cookie'][0].should.include('express.sid');
+            });
+        });
 
+        describe('DELETE /auth route', function() {
+            before(utils.requestUrl(testPort, '/auth', 'DELETE'));
+
+
+            it('should return status 302', function() {
+                this.resp.should.have.status(302);
+            });
+
+            it('should have fired the after:logout event', function() {
+                //sinon.assert.calledWith(Graft.Auth.trigger, 'after:logout');
+            });
         });
 
     });
 
-    describe.skip('Authenticated', function() {
+    describe('Authenticated', function() {
         describe('/auth/local route', function() {
-            before(utils.requestUrl(testPort, '/auth/local', 'POST', {
+            before(utils.requestUrl(testPort, '/auth/local', 'post', {
                 username: 'user',
-                password: ''
+                password: 'password'
             }));
 
             it('should have fired the verify:local event', function() {
