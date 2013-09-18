@@ -74,7 +74,7 @@ describe('Once Started', function() {
             });
 
             it('response should have content-type json', function() {
-                this.resp.should.have.header('content-type', 'application/json');
+                this.resp.should.have.header('content-type', 'application/json; charset=utf-8');
             });
             it('should have a body', function() {
                 should.exist(this.body);
