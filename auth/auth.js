@@ -64,12 +64,20 @@ this.commands.setHandler('mount', function(key, strategy, method) {
         failureRedirect: this.request('failureRedirect')
     };
 
-    this[method]('/' + key, passport.authenticate(key, opts));
+    debug('mount', method, key);
+    function testFn(req, res, next) { debug('called mount', method, key); next(); }
+    this[method]('/' + key, testFn, passport.authenticate(key, opts));
 }, this);
 
 this.reqres.setHandler('createStrategy', function(key, Strategy, opts) {
     var opts = opts || {};
-    var verifyFn = _.bind(this.execute, this, 'verify:'+key);
+
+    var verifyFn = function() {
+        var args = Array.prototype.slice.apply(arguments);
+        args.unshift('verify:'+key);
+        this.execute.apply(this, args);
+    }.bind(this);
+
 
     var strategy = new Strategy(opts, verifyFn);
     strategy.name = key;
