@@ -111,11 +111,13 @@ describe('Once Started', function() {
             });
         });
     });
-});
 
 
 
-describe('Once Completed', function() {
     after(restoreSpies);
+    after(function() {
+        Graft.Auth.SessionStore.sessions = {};
+    });
     describe('stop server', utils.stopServer);
+
 });

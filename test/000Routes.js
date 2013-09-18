@@ -210,9 +210,10 @@ describe('Once Started', function() {
 
         });
     });
-});
 
-describe('Once Started', function() {
     after(restoreSpies);
+    after(function() {
+        Graft.Auth.SessionStore.sessions = {};
+    });
     describe('stop server', utils.stopServer);
 });
