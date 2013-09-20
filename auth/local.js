@@ -8,8 +8,24 @@ this.addInitializer(function(opts) {
 });
 
 Graft.Auth.commands.setHandler('verify:local', function(username, password, done) {
-//  if(username != 'user')
-//    done('Error', {id: 'local'});
-//  else
-    done(null, {id: 'local'});
+  var user = new Graft.Auth.Model();
+  if(user.get('username') == username) {
+    if(user.get('password') == user.hash(password)) {
+      done(null, { id: user.get('username') });
+    } else {
+      done('Incorrect password!', user);
+    }
+  } else {
+    done('Username not found!', user);
+  }
+//  user.fetch({
+//    error: function(model, res, opts) {
+//      done(res, user);
+//    },
+//    success: function() {
+//      console.log('Success');
+//      done(null, {id: 'local'});
+//    }
+//  })
+  //console.log(user.hash(password));
 }, this);

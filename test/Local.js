@@ -4,6 +4,7 @@ var path     = require('path');
 var express  = require('express');
 var Backbone = require('backbone');
 var sinon    = require('sinon');
+var crypto   = require('crypto');
 var testPort = 9503;
 
 
@@ -42,6 +43,31 @@ describe('Mounting Passport-Local Strategy', function() {
     before(function() {
         require('../server');
         require('../auth/local');
+
+        Graft.Auth.secret = {
+          "salt": "41c968e8b04a279c5bd359692cf06011"
+        };
+        Graft.Auth.Model = Backbone.Model.extend({
+          urlRoot: '/api/Account',
+          defaults: {
+            username: 'admin',
+            password: 'b05ac7d2c3d27d3a421b775827ee314d339bfa952d205373f22c2d82510f53f9' // test
+          },
+          hash: function(string) {
+            return crypto.createHmac('sha256', Graft.Auth.secret.salt).update(string).digest('hex');
+          },
+          getLoginHash: function(timestamp, string) {
+            var ts = new Date(timestamp || Date.now());
+            ts.setSeconds(0);
+            ts.setMinutes(0);
+            ts.setUTCMilliseconds(0);
+
+            var string = ['' + ts.getTime(), string].join('-');
+
+            return this.hash(string).slice(0, 8);
+          }
+        });
+
     });
     it('should have registered the subsystem', function() {
         Graft.Auth.should.have.property('Local');
@@ -103,28 +129,21 @@ describe('Once Started', function() {
 
     });
 
-    describe.skip('Authenticated', function() {
+    describe('Authenticated', function() {
         describe('/auth/local route', function() {
-            before(utils.requestUrl(testPort, '/auth/local', 'post', {
-                username: 'user',
-                password: 'password'
+            before(utils.requestUrl(testPort, '/auth/local', 'POST', {
+                username: 'admin',
+                password: 'test'
             }));
 
             it('should have fired the verify:local event', function() {
-                sinon.assert.calledWith(Graft.Auth.execute, 'verify:local');
+              sinon.assert.calledWith(Graft.Auth.execute, 'verify:local');
             });
 
-            it('should have serialized the user', function() {
-                sinon.assert.calledWith(Graft.Auth.execute, 'serialize', { id: 'local' });
+            it('should return status 302 (login success)', function() {
+              this.resp.should.have.status(302);
             });
 
-            it('should return status 200', function() {
-                this.resp.should.have.status(200);
-            });
-
-            it('should have redirected us', function() {
-                this.resp.req.path.should.eql('/');
-            });
         });
     });
 
