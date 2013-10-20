@@ -43,6 +43,7 @@
     "passport": "~0.1.17",
     "passport-local": "~0.1.6",
     "passport-dummy": "0.0.1",
+    "graft-mockdb": "git://github.com/ONCHoldings/graft-mockdb.git#master",
     "connect": "~2.8.4",
     "express": "~3.3.4"
   }

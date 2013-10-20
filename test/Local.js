@@ -44,28 +44,41 @@ describe('Mounting Passport-Local Strategy', function() {
         require('../server');
         require('../auth/local');
 
+        // A simple test data adaptor to debug the REST api.
+        Graft.directory(path.dirname(require.resolve('graft-mockdb')));
+        var Mock = require('graft-mockdb/data/mock');
+
+        Graft.on('reset:data', function() {
+            Mock.testData.Account = require('./fixture/resources/account.json');
+        }, Mock);
+
+        Mock.on('before:start', function() {
+            Graft.trigger('reset:data');
+        });
+
+
         Graft.Auth.secret = {
-          "salt": "41c968e8b04a279c5bd359692cf06011"
+            "salt": "41c968e8b04a279c5bd359692cf06011"
         };
         Graft.Auth.Model = Backbone.Model.extend({
-          urlRoot: '/api/Account',
-          defaults: {
-            username: 'admin',
-            password: 'b05ac7d2c3d27d3a421b775827ee314d339bfa952d205373f22c2d82510f53f9' // test
-          },
-          hash: function(string) {
-            return crypto.createHmac('sha256', Graft.Auth.secret.salt).update(string).digest('hex');
-          },
-          getLoginHash: function(timestamp, string) {
-            var ts = new Date(timestamp || Date.now());
-            ts.setSeconds(0);
-            ts.setMinutes(0);
-            ts.setUTCMilliseconds(0);
+            urlRoot: '/api/Account',
+            defaults: {
+                id: 'admin',
+                password: 'b05ac7d2c3d27d3a421b775827ee314d339bfa952d205373f22c2d82510f53f9' // test
+            },
+            hash: function(string) {
+                return crypto.createHmac('sha256', Graft.Auth.secret.salt).update(string).digest('hex');
+            },
+            getLoginHash: function(timestamp, string) {
+                var ts = new Date(timestamp || Date.now());
+                ts.setSeconds(0);
+                ts.setMinutes(0);
+                ts.setUTCMilliseconds(0);
 
-            var string = ['' + ts.getTime(), string].join('-');
+                var string = ['' + ts.getTime(), string].join('-');
 
-            return this.hash(string).slice(0, 8);
-          }
+                return this.hash(string).slice(0, 8);
+            }
         });
 
     });
@@ -137,11 +150,11 @@ describe('Once Started', function() {
             }));
 
             it('should have fired the verify:local event', function() {
-              sinon.assert.calledWith(Graft.Auth.execute, 'verify:local');
+                sinon.assert.calledWith(Graft.Auth.execute, 'verify:local');
             });
 
             it('should return status 302 (login success)', function() {
-              this.resp.should.have.status(302);
+                this.resp.should.have.status(302);
             });
 
         });
