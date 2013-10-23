@@ -18,7 +18,7 @@ Graft.Auth.commands.setHandler('verify:local', function(username, password, done
     function doneFn(model, res, opts) {
         if(user.get('id') == username) {
             if(user.get('password') == user.hash(password)) {
-                done(null, { id: user.get('id') });
+                done(null, user);
             } else {
                 done('Incorrect password!');
             }
