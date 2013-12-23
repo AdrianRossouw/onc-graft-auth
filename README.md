@@ -31,13 +31,16 @@ Example:
   var fb_passport_plugin = require('graft-auth/auth/fb_auth_plug.js');
   var user_psp = {
     'auth': 'fb',
-    'id': fb_id, // ==== FB id getted from FB SDK
-    'expires': expires, // === FB access token expiration value getted from FB SDK
-    'access_token': access_token, // === FB access token getted from FB SDK
+    'id': fb_id,
+    'expires': expires,
+    'access_token': access_token,
     'status': 'fb_user'
   };
   fb_passport_plugin.actions.authorize(req, user_psp); // ==== login example
-  fb_passport_plugin.actions.deauthorize(req); // === logout example 
+  fb_passport_plugin.actions.deauthorize(req); // === logout example
+  // fb_id // ==== FB id getted from FB SDK
+  // expires // === FB access token expiration value getted from FB SDK
+  // access_token // === FB access token getted from FB SDK
 
 ### To run tests
 
