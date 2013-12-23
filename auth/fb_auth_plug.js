@@ -13,7 +13,6 @@ Graft.use(express.session({
 Graft.use(passport.initialize());
 Graft.use(passport.session());
 
-// ==== FB AUTH PASSPORT PLUG (START) (I.C)
 var fb_passport_plugin = {
   actions: {
     authorize: function(req, object) {
@@ -73,4 +72,3 @@ var fb_passport_plugin = {
 }
 
 module.exports = fb_passport_plugin;
-// ==== FB AUTH PASSPORT PLUG (START) (I.C)
